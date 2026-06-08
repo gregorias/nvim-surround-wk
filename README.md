@@ -7,44 +7,54 @@
   <p>
     A Neovim plugin that adds Which Key support for nvim-surround.
   </p>
+  <p>
+    <img src="assets/wk-hints.png" align="center" alt="Which Key hints showing available surrounds"
+         style="max-width: 500px" />
+  </p>
 </div>
 
-nvim-surround-wk is a Neovim plugin that integrates [nvim-surround] with [which-key.nvim] to provide rich keymap visual menus and hints for adding, modifying, and deleting surroundings.
+nvim-surround-wk is a Neovim plugin that integrates [nvim-surround] with
+[Which Key] to provide rich keymap visual hints for adding, modifying, and
+deleting surrounds.
 
 ## ⚡️ Requirements
 
 - Neovim 0.11+
 - Required plugin dependencies:
-  - [nvim-surround]
-  - [which-key.nvim]
+  - [nvim-surround] (version TBD)
+  - [Which Key]
 
 ## 📦 Installation
 
-Install the plugin with your preferred package manager, such as [lazy.nvim]:
+Install the plugin with your preferred package manager, such as [Lazy]:
 
 ```lua
 {
   "gregorias/nvim-surround-wk",
-  version = "*", -- Use latest release
-  config = function()
-    require("nvim-surround-wk").setup()
-  end,
+  version = "*",
+  config = true,
 }
-```
-
-## ⚙️ Configuration
-
-```lua
--- Default configuration
-require("nvim-surround-wk").setup({
-  -- Add configuration options here
-})
 ```
 
 ## 🚀 Usage
 
-Describe the usage of your plugin here.
+Nvim-surround-wk uses a `label` in a surround definition.
+Nvim-surround comes with labels for its built-in surrounds.
+For user-defined surrounds, you need to provide the label field like so:
+
+```lua
+require"nvim-surround".buffer_setup{
+  surrounds = {
+    ["$"] = {
+      add = { "${", "}" },
+      find = "$%b{}",
+      delete = "^(..)().-(.)()$",
+      label = "${…}"
+    },
+  }
+}
+```
 
 [nvim-surround]: https://github.com/kylechui/nvim-surround
-[which-key.nvim]: https://github.com/folke/which-key.nvim
-[lazy.nvim]: https://github.com/folke/lazy.nvim
+[Which Key]: https://github.com/folke/which-key.nvim
+[Lazy]: https://github.com/folke/lazy.nvim

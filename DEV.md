@@ -26,7 +26,7 @@ just init
 To generate and open a test coverage report:
 
 ```shell
-rm luacov.stats.out && just test && just generate-test-coverage-report && open luacov-html/index.html
+rm luacov.stats.out && just test && just generate-test-coverage-report && open index.html
 ```
 
 ### Version release & distribution
@@ -66,10 +66,21 @@ graph TD
         NvimShim -- "Sets" --> XDG["XDG_* Env Vars"]
         NvimShim -- "Loads" --> InitLua["$XDG_CONFIG_HOME/nvim/init.lua"]
         NvimShim -- "Launches" --> BustedProcess["Busted Runner"]
+        BustedProcess -- "Runs" --> E2eSpecFiles["*_e2e_spec.lua"]
+        E2eSpecFiles -- "Spawns" --> RemoteNvim["Remote Neovim"]
+
         BustedProcess -- "Runs" --> SpecFiles["*_spec.lua"]
         XDG -- "Redirects to" --> TestXDG[".tests/xdg"]
+        RemoteNvim -- "Inherits" --> XDG
+
+        subgraph Remote["Remote Neovim Test Environment"]
+            RemoteNvim -- "Executes" --> IsolatedCode["Isolated Test Code"]
+        end
+
+        RemoteNvim -- "Loads" --> InitLua["$XDG_CONFIG_HOME/nvim/init.lua"]
 
         SpecFiles -- "Validates" --> Assertions["Assertions & Results"]
+        E2eSpecFiles -- "Validates" --> Assertions["Assertions & Results"]
     end
 ```
 
@@ -78,3 +89,57 @@ graph TD
 We initialize Luacov in Neovim’s init.lua.
 Initializing Luacov in the most outer layer, Busted, didn’t work — Luacov wasn’t
 accurately capturing tested code.
+
+## Architecture
+
+```mermaid
+---
+title: nvim-surround-wk module structure
+---
+graph TD
+  main[nvim-surround-wk.lua]
+
+  subgraph "nvim-surround-wk/"
+    wk-plugin[wk-plugin.lua]
+    wk-plugin-state[wk-plugin-state.lua]
+  end
+
+  subgraph "External Dependencies"
+    nvim-surround["nvim-surround (config)"]
+    which-key["which-key"]
+  end
+
+  main --> wk-plugin
+  main --> wk-plugin-state
+  main --> nvim-surround
+  main --> which-key
+
+  wk-plugin --> wk-plugin-state
+  wk-plugin --> which-key
+```
+
+### Module Breakdown
+
+- **Entry point**:
+  `nvim-surround-wk.lua` initializes and tears down the plugin, and acts as the
+  monkey-patch layer over `nvim-surround`'s character input.
+- **wk-plugin.lua**:
+  Implements the custom Which Key plugin logic to present the available surround
+  actions.
+- **wk-plugin-state.lua**:
+  Holds global state for the Which Key plugin popup integration, such as key
+  definitions and hints.
+
+## ADRs
+
+### Using LuaRocks
+
+I set up this plugin as a Lua package using LuaRocks.
+Neovim plugins are effectively Lua packages that just use Neovim as the
+intepreter.
+Using LuaRocks lets me easily install and use Busted or LuaCov for tests.
+
+### As a separate plugin
+
+This functionality is not in Nvim-surround itself, because
+[the author themself wished so](https://github.com/kylechui/nvim-surround/pull/447#issuecomment-4639252305).
