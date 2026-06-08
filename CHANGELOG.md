@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog][kac], and this project adheres to
 
 ### Added
 
+## TBR — 2026-06-08
+
+### Added
+
 - Initial template structure for nvim-surround-wk.
 
 [semver]: https://semver.org/spec/v2.0.0.html
