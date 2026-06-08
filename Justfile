@@ -1,0 +1,44 @@
+# Initialize the repository:
+#
+# 1. Hook up Lefthook
+# 2. Set up Luarocks and Lua test dependencies.
+# 3. Enable Direnv.
+init:
+  lefthook install
+  luarocks init --lua-version 5.1 --lua-versions 5.1
+  # Revert unnecessary changes.
+  git restore .gitignore
+  rm -f ./luarocks
+  # Initialize LuaRocks
+  luarocks build --only-deps --lua-version 5.1
+  # Install test dependencies.
+  luarocks install busted
+  luarocks install luacov
+  luarocks install luacheck
+  # Fix https://github.com/lunarmodules/luacov/issues/122
+  cp -r lua_modules/lib/luarocks/rocks-5.1/luacov/*/src lua_modules/share/lua/5.1/luacov/reporter
+  ./scripts/install-which-key.sh
+  direnv allow
+
+clean-test:
+  rm -fr .tests/xdg/local
+  rm -f  .tests/xdg/config/nvim/nvim-pack-lock.json
+
+generate-test-coverage-report:
+  @luacov
+
+luacheck:
+  @luacheck .
+
+typecheck:
+  @bash scripts/typecheck.sh
+
+test:
+  @rm -f luacov.stats.out
+  @busted
+
+bump:
+  ./scripts/bump
+
+push-current-version:
+  ./scripts/push-current-version

@@ -1,0 +1,12 @@
+deps/
+.tests
+
+# LuaRocks
+/lua_modules
+/.luarocks
+
+# LuaCov
+luacov.stats.out
+luacov-html
+luacov.report.html
+luacov.report.out

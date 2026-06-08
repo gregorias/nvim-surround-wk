@@ -1,0 +1,31 @@
+pre-commit:
+  parallel: true
+  commands:
+    tests:
+      run: just test
+    typecheck:
+      run: just typecheck
+    markdownlint:
+      tags: documentation style
+      glob: "*.md"
+      run: markdownlint {staged_files}
+    lychee:
+      tags: documentation
+      glob: "*.md"
+      run: lychee --accept "100..=103,200..=299,403,429,504" --root-dir=. DEV.md README.md IDEAS.md
+    luacheck:
+      tags: style lint
+      files: git diff --name-only --cached --diff-filter=AM
+      glob: "*.lua"
+      run: luacheck {staged_files}
+    stylua:
+      tags: style
+      run: stylua --check lua --color always
+    yaml-prettier:
+      tags: style
+      glob: "*.{yml,yaml}"
+      run: prettier -c {staged_files}
+commit-msg:
+  commands:
+    commitlint:
+      run: commitlint --edit={1}

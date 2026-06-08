@@ -1,0 +1,11 @@
+return {
+  include = {
+    "lua/nvim-surround-wk$",
+    "lua/nvim-surround-wk/.*$",
+  },
+  modules = {
+    ["nvim-surround-wk"] = "lua/nvim-surround-wk.lua",
+  },
+  reporter = "html",
+  reportfile = "luacov.report.html",
+}
