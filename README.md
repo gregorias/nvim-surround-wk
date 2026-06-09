@@ -21,7 +21,8 @@ deleting surrounds.
 
 - Neovim 0.11+
 - Required plugin dependencies:
-  - [nvim-surround] (version TBD)
+  - [nvim-surround]
+    ([> v4.0.5 or HEAD](https://github.com/kylechui/nvim-surround/commit/8b47db616ef658b8fc27e61db2896aa2f40134de))
   - [Which Key]
 
 ## 📦 Installation
