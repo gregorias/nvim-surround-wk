@@ -32,7 +32,6 @@ Install the plugin with your preferred package manager, such as [Lazy]:
 ```lua
 {
   "gregorias/nvim-surround-wk",
-  version = "*",
   config = true,
 }
 ```
