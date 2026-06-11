@@ -55,6 +55,13 @@ require"nvim-surround".buffer_setup{
 }
 ```
 
+## Limitations
+
+- All available surrounds need to be preconfigured.
+  Which Key doesn’t process unconfigured triggers.
+- Can’t use the space character as a trigger.
+  This is probably a Which Key bug/limitation.
+
 [nvim-surround]: https://github.com/kylechui/nvim-surround
-[Which Key]: https://github.com/folke/which-key.nvim
+[Which Key]: https://github.com/folke/which-key.nvim
 [Lazy]: https://github.com/folke/lazy.nvim
